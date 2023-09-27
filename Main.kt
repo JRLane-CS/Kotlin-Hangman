@@ -35,36 +35,36 @@ private fun changeHangman(guesses: Int, hangmanArray: Array<String>) : Array<Str
 }
 
 //function to display guessed letters in the secret word
-private fun createHintString (guessedString: String, secretWord: String, userLetter: Char) : String {
+private fun createHintString (hintString: String, secretWord: String, userLetter: Char) : String {
 
     //set blank string as default
-    var hintString : String  = ""
+    var newHintString : String  = ""
 
-    //if user letter is space then create new underlined string
+    //if user letter is a space then create new underlined string
     if (userLetter == ' ') {
         for (i: Int in 0 until secretWord.length) {
-            hintString += "_"
+            newHintString += "_"
         }
 
-    //otherwise, copy guessString to identifiedString and add userLetter if in secretWord
+    //otherwise, copy hintString to newHintString and add userLetter if in secretWord
     } else {
         for (i: Int in 0 until secretWord.length) {
-            hintString += if (userLetter == secretWord[i]) {
+            newHintString += if (userLetter == secretWord[i]) {
                 userLetter
             } else {
-                guessedString[i]
+                hintString[i]
             }
         }
     }
 
     //return new hint string
-    return hintString
+    return newHintString
 }
 
 //function to determine if input char is in secret word
 private fun compareGuessToSecret(guess: Char, secret: String) : Boolean {
 
-    //return boolean of whether the char input is in the secret word
+    //return boolean of whether the guess char is in the secret word
     return guess in secret
 }
 
@@ -99,7 +99,6 @@ fun main(vararg args: String) {
 
     //declare defaults
     var userLetter : Char = '!'
-    var hintString = ""
     var hangmanImage = createScaffold()
     var guesses = 6
     var control = true
@@ -111,8 +110,7 @@ fun main(vararg args: String) {
     }
 
     //create blank identified letters string
-    hintString = createHintString(
-        hintString, secretWord, userLetter = ' ')
+    var hintString = createHintString("", secretWord, userLetter = ' ')
 
     //draw initial hangman scaffold
     drawHangman(hangmanImage)
@@ -128,7 +126,7 @@ fun main(vararg args: String) {
         try {
             userLetter = readln()[0].lowercaseChar()
         } catch (e: Exception) {
-            println("\nInvalid input. Please type a letter.")
+            println("\nInvalid input. Exception: $e \nPlease type a letter.")
         }
 
         //if user letter = !, quit loop
@@ -166,21 +164,20 @@ fun main(vararg args: String) {
             try {
                 userLetter = readln()[0].lowercaseChar()
             } catch (e: Exception) {
-                println("\nInvalid input. Please type a letter.")
+                println("\nInvalid input. Exception: $e \nPlease type a letter.")
             }
 
-            //if not y, set control to false, exit while loop
+            //if not 'y', set control false to exit while loop, say goodbye
             if (userLetter != 'y') {
                 control = false
                 println("Goodbye!\n")
 
-                //else reset game variables
+            //else reset game variables
             } else {
                 println()
                 guesses = 6
                 secretWord = createSecret()
-                hintString = createHintString(
-                    hintString, secretWord, userLetter = ' ')
+                hintString = createHintString("", secretWord, userLetter = ' ')
                 hangmanImage = createScaffold()
                 drawHangman(hangmanImage)
             }
